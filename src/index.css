@@ -1,0 +1,123 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    font-size: 112.5%; /* Scale root font size from 16px to 18px (+1.5px to +2px for all text elements) */
+  }
+
+  :root {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color-scheme: light;
+  }
+  
+  body {
+    background-color: #f8fafc;
+    color: #0f172a;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Monospace & Tabular figures for operational data */
+  .font-mono, code, kbd, samp {
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Fix mobile HTML5 date input placeholder & truncation */
+input[type="date"] {
+  min-width: 130px;
+  color-scheme: light;
+}
+
+input[type="date"]::-webkit-datetime-edit {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+input[type="date"]:invalid::-webkit-datetime-edit {
+  color: #64748b;
+}
+
+/* Custom scrollbars for high-density engineering grids */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 15mm !important;
+  }
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-family: "Times New Roman", Times, serif !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  thead {
+    display: table-header-group;
+  }
+  tr, .signature-block {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  body * {
+    visibility: hidden !important;
+  }
+  #pdf-report-document, #pdf-report-document * {
+    visibility: visible !important;
+  }
+  #pdf-report-document {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  #pdf-report-document table {
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+    border: none !important;
+    width: 100% !important;
+    table-layout: fixed !important;
+  }
+  #pdf-report-document th,
+  #pdf-report-document td {
+    border: 0.5pt solid #000000 !important;
+    box-sizing: border-box !important;
+  }
+  .pdf-page {
+    page-break-after: always !important;
+    break-after: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    background: #ffffff !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .pdf-page:last-child {
+    page-break-after: auto !important;
+    break-after: auto !important;
+  }
+}
+

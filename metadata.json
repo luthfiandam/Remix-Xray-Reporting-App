@@ -1,0 +1,11 @@
+{
+  "name": "Remix X-Ray Reporting App",
+  "description": "X-Ray \u0026 Security Equipment reporting application for PT. Nararya Teknologi Indonesia with preventive/corrective workflows, WhatsApp report generation, Excel exports, and clean monitoring dashboard.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

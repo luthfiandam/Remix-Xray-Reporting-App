@@ -1,0 +1,35 @@
+{
+  "id": "/",
+  "name": "X-Ray Reporting App",
+  "short_name": "XRayNTI",
+  "description": "Aplikasi Pelaporan & Pemeliharaan X-Ray & Security Equipment PT. Nararya Teknologi Indonesia dengan kemampuan offline-first & IndexedDB caching.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0284c7",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

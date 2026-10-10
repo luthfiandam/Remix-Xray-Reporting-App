@@ -1,0 +1,21 @@
+node_modules/
+coverage/
+.DS_Store
+*.log
+server.js
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Local runtime data & states
+.data/
+telegram_subscribers.json
+telegram_server_config.json
+operational_state.json
+attendance_records.json
+google_tokens.json
+service-account*.json
+firebase-admin*.json
+*.serviceaccount.json
+migration-reports/

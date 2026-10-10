@@ -1,0 +1,410 @@
+====================================================================================================
+               DOKUMENTASI LENGKAP & SPESIFIKASI SISTEM APLIKASI
+       FASKAMPEN X-RAY MONITORING, PREVENTIVE & CORRECTIVE MAINTENANCE SYSTEM
+                   UNIT FASILITAS KEAMANAN PENERBANGAN (FASKAMPEN)
+                           BANDARA HALIM PERDANAKUSUMA
+====================================================================================================
+
+DOKUMEN SPESIFIKASI TEKNIS, FITUR OPERASIONAL, ARSITEKTUR, DAN VALUASI INVESTASI SISTEM
+Disusun untuk keperluan: Presentasi Manajemen, Audit Kelaikan Sistem, dan Panduan Operasional.
+Tanggal Rilis Versi: 2026-10-02
+Versi Aplikasi: v2.0.0 (Production Enterprise Edition)
+Status Deployment: VPS Production (nararyaapps.net) & Cloud Hybrid
+
+----------------------------------------------------------------------------------------------------
+DAFTAR ISI DOKUMEN:
+----------------------------------------------------------------------------------------------------
+1. EKSEKUTIF SUMMARY & LATAR BELAKANG PROYEK
+2. TUJUAN & MANFAAT UTAMA SISTEM BAGI BANDARA
+3. ARSITEKTUR TEKNOLOGI & INFRASTRUKTUR SISTEM (TECH STACK)
+4. HAK AKSES PENGGUNA & MODEL KEAMANAN (RBAC & SECURITY)
+5. RINCIAN SELURUH MODUL & FITUR UTAMA APLIKASI (EXHAUSTIVE FEATURES)
+   - Modul 1: Executive Command Center & Dashboard Monitoring Real-Time
+   - Modul 2: Manajemen Aset & Master Data Peralatan X-Ray
+   - Modul 3: Presensi Teknisi Berbasis Geo-fencing GPS & Selfie Anti-Fraud
+   - Modul 4: Pemeliharaan Preventif Digital (Preventive Maintenance - ICAO Compliant)
+   - Modul 5: Pemeliharaan Korektif & Ticketing Kerusakan (Corrective Maintenance)
+   - Modul 6: Sistem Pelaporan Cepat Insiden AVSEC (QR Code Direct Dispatch)
+   - Modul 7: Penjadwalan Shift & Rotasi Teknisi (Shift Scheduling Management)
+   - Modul 8: Otomasi Notifikasi & Bot Telegram Interaktif 24/7
+   - Modul 9: Generator Laporan Resmi PDF Vektor Berstandar Kedinasan
+   - Modul 10: Multi-Tier Disaster Recovery & Backup 3-Layer (Database + S3 Storage)
+   - Modul 11: Audit Trail, Keamanan Siber & Pencegahan Manipulasi Data
+6. ANALISIS BIAYA, VALUASI HARGA PASAR & KELAYAKAN INVESTASI (ROI)
+7. ESTIMASI BIAYA OPERASIONAL BULANAN (OPEX)
+8. KESIMPULAN & REKOMENDASI UNTUK MANAJEMEN
+
+====================================================================================================
+1. EKSEKUTIF SUMMARY & LATAR BELAKANG PROYEK
+====================================================================================================
+
+Unit Fasilitas Keamanan Penerbangan (Faskampen) memiliki tanggung jawab vital dalam memastikan seluruh
+peralatan pendeteksi keamanan (khususnya X-Ray Baggage, X-Ray Cabin, X-Ray Cargo, dan Walk-Through Metal
+Detector) di lingkungan bandara udara selalu beroperasi dalam kondisi prima (100% serviceable) serta
+memenuhi regulasi keselamatan radiasi dan standar penerbangan internasional (ICAO Doc 8973 & Kemenhub RI).
+
+KONDISI SEBELUM APLIKASI (LEGACY PAPER-BASED):
+1. Formulir checklist inspeksi preventif masih berbasis kertas fisik, berisiko hilang, tercecer,
+   rusak terkena air/debu, dan lambat untuk direkap saat audit inspektorat.
+2. Alur pelaporan kerusakan dari petugas AVSEC (Aviation Security) ke teknisi sering terlambat karena
+   menggunakan pesan WhatsApp tidak terstruktur atau panggilan telepon lisan, sehingga respon
+   perbaikan memakan waktu lama (downtime tinggi).
+3. Sulit memantau riwayat kerusakan berulang pada mesin X-Ray tertentu dan keteraturan uji CTP/STP
+   (Combined/Standard Test Piece) serta kebocoran radiasi tabung X-Ray.
+4. Presensi dan jadwal tugas teknisi rentan tumpang tindih serta sulit diverifikasi keaslian kehadiran
+   di lokasi titik tugas.
+
+SOLUSI DIGITAL TERPADU (APLIKASI INI):
+Aplikasi "Faskampen X-Ray Monitoring & Reporting System" merupakan platform digital terpadu berbasis Web
+& Progressive Web App (PWA) modern yang mendigitalisasi seluruh siklus pemeliharaan peralatan keamanan
+bandara secara real-time, akuntabel, terlindungi enkripsi, dan terintegrasi langsung dengan cloud
+storage lokal Indonesia serta otomasi peringatan Telegram.
+
+====================================================================================================
+2. TUJUAN & MANFAAT UTAMA SISTEM BAGI BANDARA
+====================================================================================================
+
+1. ZERO DOWNTIME PERALATAN KEAMANAN:
+   Mempercepat Response Time dan penanganan perbaikan (MTTR - Mean Time to Repair) mesin X-Ray di titik
+   keberangkatan dan kedatangan penumpang sehingga tidak menimbulkan antrean panjang (bottleneck).
+
+2. KEPATUHAN REGULASI & AUDIT READY (ICAO & KEMENHUB):
+   Seluruh data pengujian STP (Steel Penetration, Wire Resolution, Organic/Inorganic Discrimination) dan
+   Radiation Leakage Test tersimpan rapi secara digital dengan timestamp permanen, siap diekspor menjadi
+   laporan kedinasan berformat PDF resmi bertanda tangan digital kapan pun diminta regulator.
+
+3. EFISIENSI BIAYA KERTAS & ATK (PAPERLESS OFFICE):
+   Mengeliminasi pencetakan formulir checklist harian, mingguan, dan bulanan yang memakan puluhan rim
+   kertas dan tempat penyimpanan map arsip setiap tahunnya.
+
+4. DISASTER RECOVERY & PERLINDUNGAN ASET DIGITAL 100%:
+   Data master, log inspeksi, presensi, hingga foto eviden bukti perbaikan dicadangkan secara otomatis
+   setiap malam ke 3 layer terpisah: Server Lokal, Cloud Object Storage (IDCloudHost S3), dan Google Drive.
+
+====================================================================================================
+3. ARSITEKTUR TEKNOLOGI & INFRASTRUKTUR SISTEM (TECH STACK)
+====================================================================================================
+
+Sistem dirancang dengan arsitektur modern berkinerja tinggi, modular, dan hemat sumber daya (lightweight):
+
+A. FRONTEND CLIENT:
+   - Framework: React 19 dengan TypeScript untuk keamanan tipe data dan pencegahan bug saat runtime.
+   - Styling & Desain: Tailwind CSS modern dengan estetika Command Center berstandar industri kedinasan.
+   - Desain Responsif: Optimal dibuka di Smartphone Teknisi (Android/iOS), Tablet, Laptop, maupun Layar
+     Monitor TV Pengawas di ruang kontrol.
+   - PWA (Progressive Web App): Dapat diinstal langsung ke layar utama HP teknisi tanpa perlu Google Play Store,
+     lengkap dengan Web App Manifest dan Service Worker offline-caching.
+   - Iconography & Visual: Lucide React Icons untuk navigasi yang intuitif dan profesional.
+
+B. BACKEND APPLICATION SERVER:
+   - Runtime & Framework: Node.js dengan Express Server ditulis dalam TypeScript (tsx engine).
+   - Arsitektur API: RESTful API dengan endpoint modular, validasi ketat, sanitasi input, dan CORS policy.
+   - Keamanan Server: Helmet.js untuk HTTP header security, Express Rate Limiter untuk pencegahan DDoS
+     dan Brute-force, timeout guards dengan AbortSignal.
+   - Entry Point Produksi: Single entry point `server.ts` yang melayani API backend dan static assets Vite.
+
+C. DATABASE LAYER (MASTER PERSISTENCE):
+   - Database Engine: Supabase Enterprise PostgreSQL Relational Database.
+   - Karakteristik: Skema relasional terstruktur (Technicians, Equipment, Attendance, Preventive Records,
+     Corrective Records, Shift Schedules, AVSEC Reports, Security Audit Logs).
+   - Keamanan: Role-level connection pooling, SSL encryption in transit, dan backup point-in-time recovery.
+
+D. CLOUD OBJECT STORAGE (S3 COMPATIBLE):
+   - Provider: IDCloudHost Object Storage S3 (Data Center Jakarta/Indonesia).
+   - Penggunaan: Penyimpanan foto selfie presensi, foto bukti sebelum & sesudah perbaikan tiket, foto
+     kerusakan AVSEC, arsip dokumen PDF, dan file snapshot backup.
+   - Keamanan Akses: Presigned URL berbatas waktu kadaluarsa (Secure Presigned Upload & Download), tanpa
+     pernah mengekspos kredensial rahasia (Secret Key) ke browser publik.
+
+E. MESIN LAPORAN RESMI (PDF GENERATOR):
+   - Mesin: Headless Chromium via Puppeteer Server-side + PDF-Lib.
+   - Kualitas: Rendering vektor resolusi tinggi (Crisp Vector Fonts, Header Resmi, Tabel Rapi, Lampiran
+     Foto Bukti, dan Digital Signature Pad).
+
+F. ENGINE NOTIFIKASI REAL-TIME:
+   - Integrasi: Telegram Bot API (Mendukung Polling otomatis & Webhook Mode).
+   - Fitur: Broadcast instan tiket kerusakan darurat, briefing harian pagi/sore, dan laporan hasil backup.
+
+G. CADANGAN MULTI-LAYER DISASTER RECOVERY:
+   - Layer 1: Disk Lokal Server VPS Linux (`/backups/`).
+   - Layer 2: IDCloudHost S3 Cloud Storage Bucket (`backups/`).
+   - Layer 3: Google Drive Akun Resmi via Google Apps Script (GAS) Web App Endpoint.
+
+====================================================================================================
+4. HAK AKSES PENGGUNA & MODEL KEAMANAN (RBAC & SECURITY)
+====================================================================================================
+
+Sistem menerapkan prinsip pemisahan wewenang (Role-Based Access Control) yang ketat:
+
+1. ROLE: TEKNISI FASKAMPEN (OPERATOR LAPANGAN)
+   - Hak Akses:
+     * Melakukan Presensi Masuk (Check-in) dan Pulang (Check-out) dengan validasi GPS & Kamera Selfie.
+     * Mengisi Formulir Inspeksi Pemeliharaan Preventif (Harian, Mingguan, Bulanan) untuk unit X-Ray.
+     * Menerima disposisi tiket perbaikan korektif, memperbarui progress perbaikan, dan melampirkan foto.
+     * Melihat jadwal shift kerja pribadi dan rekan satu regu.
+     * Membubuhkan tanda tangan digital pada laporan pekerjaan yang diselesaikan.
+
+2. ROLE: SUPERVISOR OPERASIONAL (ADMINISTRATOR FASILITAS)
+   - Hak Akses:
+     * Seluruh hak akses teknisi.
+     * Akses Dashboard Monitoring Utama dan Ringkasan Analitik Kesiapan Alat.
+     * Manajemen Master Data Peralatan (Tambah unit, ubah spesifikasi, cetak label stiker QR).
+     * Manajemen Akun Teknisi & Pengaturan Password / PIN.
+     * Penyusunan dan penugasan Jadwal Shift Regu Kerja Teknisi.
+     * Verifikasi akhir (Review & Approval) penutupan tiket Corrective Maintenance.
+     * Ekspor Laporan Resmi Kedinasan (Format PDF Vektor siap cetak).
+     * Akses Pusat Backup & Restore Sistem (Unduh backup, trigger manual, pulihkan data).
+     * Pemeriksaan Log Keamanan Sistem (Audit Trail Logs).
+
+3. ROLE: PETUGAS AVSEC (AVIATION SECURITY) - AKSES PUBLIK VIA SCAN QR
+   - Hak Akses Khusus:
+     * Tanpa perlu akun/password (Zero Barrier).
+     * Cukup melakukan scan stiker QR pada fisik mesin X-Ray di terminal bandara.
+     * Mengisi formulir pelaporan kendala darurat (Nama Petugas, Gejala Kerusakan, Foto Bukti).
+     * Laporan otomatis diteruskan detik itu juga ke grup Telegram teknisi.
+
+====================================================================================================
+5. RINCIAN SELURUH MODUL & FITUR UTAMA APLIKASI (EXHAUSTIVE FEATURES)
+====================================================================================================
+
+----------------------------------------------------------------------------------------------------
+MODUL 1: EXECUTIVE COMMAND CENTER & DASHBOARD MONITORING REAL-TIME
+----------------------------------------------------------------------------------------------------
+- Live Status Card:
+  * Total Unit X-Ray Terpasang di Seluruh Area Bandara.
+  * Jumlah Unit Normal & Siap Operasi (Serviceable).
+  * Jumlah Unit Dalam Masa Pemeliharaan / Perbaikan (Under Maintenance).
+  * Jumlah Tiket Kerusakan Aktif (Open Tickets).
+  * Jumlah Teknisi yang Sedang Bertugas (On-Duty).
+- Filter Cepat Lokasi & Kategori Mesin:
+  * Filter berdasarkan Area: Terminal Keberangkatan, Terminal Kedatangan, Gedung VIP, Cargo Area, dll.
+  * Filter berdasarkan Tipe: Cabin X-Ray, Hold Baggage X-Ray, Dual View, Cargo Scanner.
+- Status Indikator Infrastruktur:
+  * Indikator status koneksi Database Supabase, Cloud Storage S3, dan Bot Telegram.
+- Quick Actions Menu:
+  * Tombol Pintas Presensi Cepat, Input Preventif Baru, Lapor Kerusakan Cepat, Cetak Laporan PDF,
+    dan Buka Pusat Backup.
+
+----------------------------------------------------------------------------------------------------
+MODUL 2: MANAJEMEN ASET & MASTER DATA PERALATAN X-RAY
+----------------------------------------------------------------------------------------------------
+- Informasi Lengkap Profil Mesin:
+  * Kode Inventaris Alat (Contoh: XRAY-HLP-DEP-01).
+  * Merk & Model Pabrikan (Smiths Detection Heimann, Rapiscan Systems, Astrophysics, L3Harris, Nuctech).
+  * Nomor Seri Mesin (Serial Number Generator/Lookup).
+  * Lokasi Titik Penempatan Spesifik (Contoh: Security Check Point 1 Gate 3).
+  * Tahun Instalasi & Riwayat Kalibrasi Terakhir BAPETEN.
+  * Status Kelaikan (Operational, Degraded, Out of Service).
+- Generator Stiker QR Code Mesin:
+  * Aplikasi dapat mengenerate QR Code unik untuk setiap mesin X-Ray secara otomatis.
+  * Tombol unduh gambar QR atau cetak stiker untuk ditempel langsung pada casing fisik mesin X-Ray.
+- Timeline Servis & Riwayat Pemeliharaan:
+  * Catatan kronologis setiap inspeksi preventif dan perbaikan korektif yang pernah dialami mesin tersebut.
+
+----------------------------------------------------------------------------------------------------
+MODUL 3: PRESENSI TEKNISI BERBASIS GEO-FENCING GPS & SELFIE ANTI-FRAUD
+----------------------------------------------------------------------------------------------------
+- Validasi Lokasi Koordinat (Geo-fencing GPS):
+  * Sistem mengambil koordinat real-time perangkat teknisi via HTML5 Geolocation API.
+  * Menghitung jarak relatif teknisi terhadap titik pusat koordinat Bandara Halim Perdanakusuma.
+  * Menolak otomatis jika teknisi mencoba presensi di luar radius kerja bandara yang ditentukan.
+- Kamera Selfie Langsung (Anti-Manipulasi):
+  * Mengakses kamera depan perangkat secara langsung via WebRTC Camera Stream.
+  * Menonaktifkan opsi upload file dari galeri ponsel untuk mencegah kecurangan foto lama/titip absen.
+  * Foto otomatis dikompresi dan diunggah ke IDCloudHost S3 Storage dengan metadata aman.
+- Riwayat Kehadiran Terperinci:
+  * Pencatatan jam masuk (Check-in), jam pulang (Check-out), kalkulasi durasi kerja, dan status dinas.
+  * Ekspor rekonsiliasi data presensi untuk kebutuhan payroll dan rekapitulasi kinerja bulanan.
+
+----------------------------------------------------------------------------------------------------
+MODUL 4: PEMELIHARAAN PREVENTIF DIGITAL (PREVENTIVE MAINTENANCE - ICAO COMPLIANT)
+----------------------------------------------------------------------------------------------------
+- Checklist Terstruktur Standar Penerbangan:
+  * 1. Pemeriksaan Mekanikal & Fisik:
+       - Kondisi sabuk konveyor (Conveyor belt tension & tracking).
+       - Tirai timbal pelindung radiasi (Lead curtains integrity - tidak robek/lepas).
+       - Tombol Emergency Stop di kedua sisi mesin (Uji fungsi pemutus arus darurat).
+       - Roller konveyor dan pelindung debu.
+  * 2. Pemeriksaan Elektrikal & Komputer:
+       - Kestabilan tegangan catu daya dan performa unit UPS.
+       - Parameter tabung generator X-Ray: Tegangan Tabung (kV) dan Arus Tabung (mA).
+       - Fungsi tombol konsol keyboard, roller trackball, dan monitor display ganda.
+  * 3. Pengujian Kualitas Citra X-Ray (STP / CTP Test Piece Box):
+       - Wire Resolution (Kemampuan mendeteksi kawat halus hingga AWG 36 / AWG 40).
+       - Steel Penetration (Daya tembus baja standar: 26mm s/d 34mm).
+       - Material Discrimination (Pembedaan warna organik/cokelat-oranye, anorganik/hijau,
+         dan logam padat/biru).
+  * 4. Uji Kebocoran Radiasi (Radiation Leakage Safety Inspection):
+       - Pengukuran tingkat radiasi pada jarak 5 cm dan 100 cm dari seluruh permukaan mesin.
+       - Pengecekan terhadap ambang batas toleransi BAPETEN (maksimum < 1 uSv/jam).
+- Kesimpulan Otomatis (Automatic Pass/Fail Decision):
+  * Sistem otomatis menandai status "LULUS (LAIK OPERASI)" atau "PERLU TINDAKAN (FAIL)" berdasarkan
+    input parameter teknis teknisi.
+- Tanda Tangan Digital Langsung:
+  * Teknisi pemeriksa menandatangani dokumen secara digital di atas layar sentuh (Signature Pad).
+
+----------------------------------------------------------------------------------------------------
+MODUL 5: PEMELIHARAAN KOREKTIF & TICKETING KERUSAKAN (CORRECTIVE MAINTENANCE)
+----------------------------------------------------------------------------------------------------
+- Siklus Hidup Tiket Lengkap (Ticket Lifecycle Management):
+  * Status: DILAPORKAN (OPEN) -> DALAM INVESTIGASI -> PENGERJAAN -> SELESAI -> DIVERIFIKASI (CLOSED).
+- Klasifikasi Tingkat Urgensi:
+  * Critical / Darurat (Mesin mati total pada jam sibuk penerbangan).
+  * High (Fungsi pencitraan menurun atau roller tersendat).
+  * Medium / Low (Kendala minor pada lampu indikator atau sensor non-kritis).
+- Dokumentasi Foto Bukti (Before & After Evidence):
+  * Pengambilan foto saat kerusakan ditemukan dan foto setelah perbaikan selesai.
+- Log Suku Cadang & Tindakan Penanganan:
+  * Pencatatan detail komponen pengganti (Contoh: Penggantian Optocoupler, Roller Bearing, Power Supply).
+  * Catatan kronologis langkah troubleshooting untuk menjadi basis pengetahuan (*Knowledge Base*) teknisi lain.
+- Deteksi Kerusakan Berulang (Recurring Problem Alert):
+  * Sistem otomatis mendeteksi jika mesin yang sama mengalami gejala serupa dalam kurun waktu 30 hari
+    dan memberikan peringatan audit khusus kepada Supervisor.
+
+----------------------------------------------------------------------------------------------------
+MODUL 6: SISTEM PELAPORAN CEPAT INSIDEN AVSEC (QR CODE DIRECT DISPATCH)
+----------------------------------------------------------------------------------------------------
+- Pelaporan Mandiri Tanpa Login (Zero-friction Reporting):
+  * Petugas AVSEC yang mendapati mesin X-Ray macet cukup membuka kamera HP dan scan QR Code pada mesin.
+  * Halaman pelaporan otomatis terbuka dengan nomor dan lokasi mesin yang sudah terisi otomatis.
+- Input Gejala dan Foto Bukti Seketika:
+  * Petugas memilih kategori kerusakan (Macet, Monitor Gelap, Gambar Rusak, Tombol Rusak, dll).
+  * Lampiran foto kendala langsung dari tempat kejadian.
+- Disposisi Instan ke Telegram Teknisi:
+  * Dalam hitungan 1 detik setelah tombol kirim ditekan, tiket perbaikan otomatis tercipta dan bot Telegram
+    menyiarkan sirine darurat ke grup teknisi yang sedang bertugas.
+
+----------------------------------------------------------------------------------------------------
+MODUL 7: PENJADWALAN SHIFT & ROTASI TEKNISI (SHIFT SCHEDULING MANAGEMENT)
+----------------------------------------------------------------------------------------------------
+- Manajemen 4 Siklus Dinas:
+  * Shift Pagi (06:00 - 14:00 WIB).
+  * Shift Siang (14:00 - 22:00 WIB).
+  * Shift Malam (22:00 - 06:00 WIB).
+  * Lepas Tugas / Off.
+- Penugasan Regu & Lokasi Penjagaan:
+  * Supervisor dapat mengatur regu kerja per terminal (Terminal Domestik, Terminal VIP, Gudang Kargo).
+- Tampilan Kalender & Daftar Terpadu:
+  * Teknisi dapat melihat jadwal kerjanya selama 1 bulan penuh secara transparan.
+
+----------------------------------------------------------------------------------------------------
+MODUL 8: OTOMASI NOTIFIKASI & BOT TELEGRAM INTERAKTIF 24/7
+----------------------------------------------------------------------------------------------------
+- Alert Kerusakan Real-Time:
+  * Pesan notifikasi tiket darurat lengkap dengan Nama Mesin, Lokasi, Pelapor, dan link akses tiket.
+- Laporan Briefing Harian Terjadwal:
+  * Rekapitulasi otomatis kesiapan peralatan menjelang pergantian shift tugas.
+- Laporan Hasil Backup Midnight:
+  * Laporan otomatis setiap pukul 00:00 WIB yang melaporkan kesehatan database, jumlah record,
+    jumlah berkas S3 yang dicadangkan, dan status Google Drive.
+- Mode Komunikasi Fleksibel:
+  * Mendukung mode Polling otomatis tanpa perlu IP publik khusus, serta mendukung mode Webhook tercepat.
+
+----------------------------------------------------------------------------------------------------
+MODUL 9: GENERATOR LAPORAN RESMI PDF VEKTOR BERSTANDAR KEDINASAN
+----------------------------------------------------------------------------------------------------
+- Format Standar Dokumen Penerbangan:
+  * Dilengkapi KOP Surat Resmi, Nomor Dokumen Unik, Metadata Pelaksanaan, dan Barcode/QR Keaslian.
+- Rendering Vektor Server-Side (Puppeteer Engine):
+  * Dihasilkan langsung dari mesin server headless browser, menghasilkan tipografi tajam, tabel rapi,
+    dan rasio kontras warna yang profesional untuk dicetak pada kertas A4.
+- Lampiran Foto Tersemat Otomatis:
+  * Seluruh foto bukti inspeksi dan dokumentasi perbaikan di-embed secara langsung ke halaman lampiran PDF.
+- Digital Signature & Verification:
+  * Memuat tanda tangan basah digital dari Teknisi Pelaksana dan tanda tangan persetujuan Supervisor.
+
+----------------------------------------------------------------------------------------------------
+MODUL 10: MULTI-TIER DISASTER RECOVERY & BACKUP 3-LAYER (DATABASE + S3 STORAGE)
+----------------------------------------------------------------------------------------------------
+- Konsep Full Snapshot Independen (v2.0.0):
+  * Backup tidak hanya mencakup tabel database teks, tetapi juga MENDOWNLOAD & MENYATUKAN SELURUH BERKAS
+    GAMBAR & DOKUMEN dari IDCloudHost S3 Storage (disimpan dalam format terenkode base64).
+- 3 Destinasi Penyimpanan Sekaligus:
+  * 1. Disk Lokal VPS Linux: Tersimpan aman di direktori `/backups/` server.
+  * 2. IDCloudHost S3 Cloud Storage: Tersimpan di direktori `backups/` bucket S3.
+  * 3. Google Drive Akun Resmi (luthfiandammm@gmail.com): Dikirim langsung via Google Apps Script (GAS)
+       Web App tanpa batas kadaluarsa token OAuth.
+- Otomasi Tengah Malam (Scheduled Midnight Backup):
+  * Scheduler otomatis mengeksekusi pencadangan penuh setiap hari pukul 00:00:00 WIB secara hening di background.
+- Fitur 1-Click Restore Komprehensif:
+  * Memulihkan seluruh data database (Teknisi, Peralatan, Presensi, Preventif, Korektif, Shift, AVSEC, Audit Log).
+  * Sekaligus MENGUNGGAH ULANG seluruh berkas gambar kembali ke bucket IDCloudHost S3 secara otomatis jika
+    penyimpanan cloud sempat terhapus atau bermasalah.
+
+----------------------------------------------------------------------------------------------------
+MODUL 11: AUDIT TRAIL, KEAMANAN SIBER & PENCEGAHAN MANIPULASI DATA
+----------------------------------------------------------------------------------------------------
+- Riwayat Audit Log Lengkap (Security Audit Trail):
+  * Setiap tindakan login, logout, perubahan master aset, penutupan tiket, dan eksekusi backup tercatat
+    beserta alamat IP, User-Agent browser, dan stempel waktu WIB.
+- Keamanan Password Berstandar Tinggi:
+  * Password teknisi diamankan menggunakan algoritma Bcrypt dengan salt rounds dan string Pepper rahasia
+    pada lapisan server, kebal terhadap kebocoran database biasa.
+- Anti-Tampering Inspeksi:
+  * Data pengujian radiasi dan CTP yang sudah ditandatangani supervisor dikunci (read-only) untuk mencegah
+    pemalsuan data saat audit eksternal.
+
+====================================================================================================
+6. ANALISIS BIAYA, VALUASI HARGA PASAR & KELAYAKAN INVESTASI (ROI)
+====================================================================================================
+
+Berapa nilai wajar sistem ini jika diajukan ke kantor atau dibandingkan dengan vendor luar?
+
+A. VALUASI PASAR SOFTWARE HOUSE (MARKET BENCHMARK):
+   Berdasarkan standar biaya pengadaan perangkat lunak institusi / BUMN / Aviation Facilities di Indonesia,
+   aplikasi setara "Aviation Security Equipment Maintenance System" dengan fitur presensi GPS, tiket instan,
+   integrasi Telegram, vector PDF, S3 storage lokal, dan multi-cloud DR dihargai pada rentang:
+   ---------------------------------------------------------------------------------------------
+   * Skema Beli Putus (Full Source Code & Hak Milik Penuh): Rp 65.000.000 s/d Rp 95.000.000,-
+   * Skema Pengadaan Vendor BUMN / Enterprise Besar:       Rp 120.000.000 s/d Rp 180.000.000,-
+   * Skema Sewa Aplikasi (SaaS Internal + SLA Support):     Rp 25.000.000 (Setup) + Rp 5.000.000 / bulan
+   ---------------------------------------------------------------------------------------------
+
+B. NILAI PENGHEMATAN & RETURN ON INVESTMENT (ROI) KANTOR:
+   1. Penghematan Kertas & Percetakan Formulir:
+      - Rata-rata 10 unit X-Ray x 3 lembar checklist x 365 hari = 10.950 lembar kertas/tahun.
+      - Ditambah formulir tiket korektif dan binder dokumen arsip fisik.
+      - Penghematan langsung: Rp 8.000.000 - Rp 15.000.000 / tahun dari ATK & biaya cetak.
+   2. Pencegahan Sanksi / Denda Audit Penerbangan:
+      - Ketiadaan dokumen inspeksi kebocoran radiasi atau keterlambatan uji CTP dapat berakibat teguran keras
+        hingga pencabutan sertifikat laik operasi dari Direktorat Keamanan Penerbangan. Nilai kepatuhan
+        ini bernilai ratusan juta rupiah bagi reputasi bandara.
+   3. Peningkatan Produktivitas & Respon Teknisi:
+      - Waktu penanganan kendala yang semula butuh koordinasi 30-60 menit terpangkas menjadi < 5 menit
+        berkat sirine instan Telegram dan scan QR AVSEC.
+
+====================================================================================================
+7. ESTIMASI BIAYA OPERASIONAL BULANAN (OPEX)
+====================================================================================================
+
+Salah satu keunggulan terbesar arsitektur aplikasi ini adalah BIAYA OPERASIONAL CLOUD YANG SANGAT KECIL:
+
+1. Server VPS Linux (Contoh: Nginx + Node.js di Cloud VPS 2 Core 4 GB RAM):
+   - Biaya: ~Rp 150.000 - Rp 250.000 / bulan.
+2. IDCloudHost Object Storage S3 (Data Center Indonesia, 50 GB - 100 GB):
+   - Biaya: ~Rp 50.000 - Rp 120.000 / bulan.
+3. Supabase Relational Database (PostgreSQL):
+   - Biaya: Rp 0 (Free Tier) s/d ~Rp 400.000 / bulan ($25 Pro Plan jika data sudah sangat masif).
+4. Bot Telegram API:
+   - Biaya: Rp 0 / GRATIS SELAMANYA.
+5. Backup Google Drive via Google Apps Script:
+   - Biaya: Rp 0 / GRATIS SELAMANYA.
+
+TOTAL ESTIMASI BIAYA BULANAN KANTOR: HANYA SEKITAR Rp 350.000 s/d Rp 600.000 PER BULAN!
+(Sistem kelas korporasi dengan biaya operasional setara langganan internet kantor).
+
+====================================================================================================
+8. KESIMPULAN & REKOMENDASI UNTUK MANAJEMEN
+====================================================================================================
+
+1. Aplikasi Faskampen X-Ray Monitoring System telah selesai dibangun secara paripurna, telah melalui
+   uji kelaikan fungsi (*production verified*), dan siap dideploy secara penuh untuk operasional harian.
+2. Digitalisasi ini menempatkan Unit Faskampen Bandara Halim Perdanakusuma sebagai pelopor unit fasilitas
+   yang modern, transparan, akuntabel, dan memenuhi standar keselamatan bandara bertaraf internasional.
+3. Direkomendasikan kepada pihak Manajemen Kantor untuk mengesahkan sistem ini sebagai Standar Operasional
+   Prosedur (SOP) Digital resmi dalam pemeliharaan seluruh peralatan keamanan penerbangan di bandara.
+
+====================================================================================================
+                          AKHIR DOKUMEN SPESIFIKASI SISTEM
+                 UNIT FASILITAS KEAMANAN PENERBANGAN (FASKAMPEN)
+====================================================================================================
